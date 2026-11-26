@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Sciget
+GenericName=Scientific desktop sessions
+Comment=Start Neurodesk and other Sciget desktops in containers
+Exec=sciget serve --open
+Terminal=false
+Categories=Science;Education;
+Keywords=neuroimaging;neurodesk;jupyter;container;
