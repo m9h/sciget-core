@@ -1,0 +1,173 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: BSD-3-Clause -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="no-referrer">
+  <title>Sciget</title>
+  <link rel="stylesheet" href="app.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <span class="wordmark">Sciget</span>
+      <nav aria-label="Main">
+        <ul class="tabs">
+          <li><button type="button" class="tab" data-view="home" aria-current="page">Home</button></li>
+          <li><button type="button" class="tab" data-view="sessions">Sessions <span id="session-count" class="count" hidden></span></button></li>
+          <li><button type="button" class="tab" data-view="settings">Settings</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="banner" class="banner" role="alert" hidden>
+    <p id="banner-text"></p>
+  </div>
+
+  <main id="main" tabindex="-1">
+    <section id="view-home" class="view" data-panel="home" aria-labelledby="home-title">
+      <h1 id="home-title">Start a desktop</h1>
+      <p class="lede">Pick a domain to run its desktop in a container on this computer. It opens in JupyterLab in a new tab.</p>
+
+      <section id="fav-section" class="block" aria-labelledby="fav-title" hidden>
+        <h2 id="fav-title">Favourites</h2>
+        <ul id="fav-list" class="cards"></ul>
+      </section>
+
+      <section class="block" aria-labelledby="all-title">
+        <h2 id="all-title">All domains</h2>
+        <p id="domains-loading" class="muted">Loading domains…</p>
+        <ul id="domain-list" class="cards"></ul>
+      </section>
+
+      <section id="remote-section" class="block" aria-labelledby="remote-title" hidden>
+        <h2 id="remote-title">Remote servers</h2>
+        <p class="muted">These run on someone else's computer and open in a new tab. Nothing is started here.</p>
+        <ul id="remote-list" class="remote-list"></ul>
+      </section>
+    </section>
+
+    <section id="view-sessions" class="view" data-panel="sessions" aria-labelledby="sessions-title" hidden>
+      <div class="view-head">
+        <h1 id="sessions-title">Sessions</h1>
+        <button type="button" id="refresh-sessions" class="btn">Refresh</button>
+      </div>
+      <p id="sessions-empty" class="empty" hidden>No sessions yet. Go to Home and choose Start on a domain.</p>
+      <ul id="session-list" class="session-list"></ul>
+    </section>
+
+    <section id="view-settings" class="view" data-panel="settings" aria-labelledby="settings-title" hidden>
+      <h1 id="settings-title">Settings</h1>
+      <p class="lede">These are the defaults for new sessions. You can change any of them when you start a session.</p>
+
+      <form id="settings-form" class="panel form" novalidate>
+        <div class="field">
+          <label for="set-engine">Default container engine</label>
+          <select id="set-engine" name="engine" aria-describedby="set-engine-hint"></select>
+          <p id="set-engine-hint" class="hint">Automatic picks the first engine that works on this computer.</p>
+        </div>
+
+        <fieldset class="field">
+          <legend>CVMFS (shared software repository)</legend>
+          <div id="set-cvmfs" class="radio-list"></div>
+        </fieldset>
+
+        <div class="field check">
+          <input type="checkbox" id="set-gpu" name="gpu" aria-describedby="set-gpu-hint">
+          <label for="set-gpu">Use the GPU by default</label>
+          <p id="set-gpu-hint" class="hint">Needs a supported GPU and its container toolkit on this computer.</p>
+        </div>
+
+        <div class="field">
+          <label for="set-storage">Storage folder</label>
+          <input type="text" id="set-storage" name="storage_dir" autocomplete="off" spellcheck="false" aria-describedby="set-storage-hint">
+          <p id="set-storage-hint" class="hint">A folder on this computer that every session can use to keep files. Type the full path.</p>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn primary">Save settings</button>
+          <p id="settings-status" class="form-status" role="status"></p>
+        </div>
+      </form>
+
+      <section class="block" aria-labelledby="engines-title">
+        <h2 id="engines-title">Container engines on this computer</h2>
+        <div class="table-wrap">
+          <table class="engines">
+            <thead>
+              <tr><th scope="col">Engine</th><th scope="col">Available</th><th scope="col">Rootless</th><th scope="col">Version</th></tr>
+            </thead>
+            <tbody id="engine-rows"></tbody>
+          </table>
+        </div>
+        <p class="hint">Rootless engines run containers as you, without administrator rights.</p>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><span class="wordmark small">Sciget</span> <span id="core-version"></span></p>
+  </footer>
+
+  <div id="live" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+  <dialog id="start-dialog" class="dialog" aria-labelledby="start-title">
+    <form id="start-form" class="form" novalidate>
+      <h2 id="start-title">Start</h2>
+      <p id="start-desc" class="muted"></p>
+
+      <div class="field">
+        <label for="start-engine">Container engine</label>
+        <select id="start-engine" name="engine"></select>
+      </div>
+
+      <div class="field">
+        <label for="start-version">Version</label>
+        <input type="text" id="start-version" name="version" autocomplete="off" spellcheck="false" aria-describedby="start-version-hint">
+        <p id="start-version-hint" class="hint">Leave as it is unless you need a specific release.</p>
+      </div>
+
+      <div class="field">
+        <label for="start-data">Data folder</label>
+        <input type="text" id="start-data" name="data_dir" autocomplete="off" spellcheck="false" aria-describedby="start-data-hint">
+        <p id="start-data-hint" class="hint">An existing folder on this computer. Inside the desktop it appears as <code>/data</code>.</p>
+      </div>
+
+      <fieldset class="field">
+        <legend>CVMFS (shared software repository)</legend>
+        <div id="start-cvmfs" class="radio-list"></div>
+      </fieldset>
+
+      <div class="field check">
+        <input type="checkbox" id="start-gpu" name="gpu">
+        <label for="start-gpu">Use the GPU</label>
+      </div>
+
+      <p id="start-error" class="form-error" role="alert" hidden></p>
+
+      <div class="form-actions end">
+        <button type="button" class="btn" id="start-cancel">Cancel</button>
+        <button type="submit" class="btn primary" id="start-submit">Start</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="logs-dialog" class="dialog wide" aria-labelledby="logs-title">
+    <div class="dialog-head">
+      <h2 id="logs-title">Logs</h2>
+      <div class="dialog-tools">
+        <button type="button" class="btn" id="logs-refresh">Refresh</button>
+        <button type="button" class="btn" id="logs-close">Close</button>
+      </div>
+    </div>
+    <p class="hint">The last 200 lines.</p>
+    <pre id="logs-body" class="logs" tabindex="0" aria-label="Log output"></pre>
+  </dialog>
+</body>
+</html>
