@@ -8,8 +8,8 @@
 Start and manage [Sciget](https://github.com/scigetorg/neurodesk-app)/Neurodesk
 container sessions from the command line or a local web UI, with no Electron.
 
-sciget-core is the engine half of the Sciget App, split out so it can be used
-headless (scripts, HPC, teaching) and packaged natively, for example as a noarch
+sciget-core reimplements the engine half of the Sciget App as a separate
+library and CLI, so it can be used headless (scripts, HPC, teaching) and packaged natively, for example as a noarch
 Fedora RPM. It needs only Python 3.10+, PyYAML and platformdirs, plus one of
 Podman, Docker or Apptainer.
 
