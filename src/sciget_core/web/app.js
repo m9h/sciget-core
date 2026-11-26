@@ -232,7 +232,9 @@ function openStart(domain) {
   $('start-desc').textContent = domain.description || '';
   fillEngineSelect($('start-engine'), s.engine || 'auto');
   $('start-version').value = domain.default_version || '';
-  $('start-data').value = s.storage_dir || '';
+  // The data folder is the user's project, mounted at /data. It is separate
+  // from the storage folder, which is always mounted, so it starts empty.
+  $('start-data').value = '';
   fillCvmfsRadios($('start-cvmfs'), 'start-cvmfs', s.cvmfs || 'auto');
   $('start-gpu').checked = Boolean(s.gpu);
   $('start-error').hidden = true;

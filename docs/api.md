@@ -31,8 +31,9 @@ HTTP layer adds no behaviour of its own.
 ## Errors
 
 A failed call returns a JSON body `{"error": "<code>", "message": "<text a person can read>"}`.
-The `<code>` values are `bad_request`, `not_found`, `conflict`, `engine_unavailable`,
-`unauthorized` and `internal`.
+The `<code>` values are `bad_request` (400, and also 403/421 from the Origin and Host
+checks, 413, 415), `not_found` (404), `unauthorized` (401), `engine_unavailable` (503)
+and `internal` (500). The UI should show `message`; codes are for programs.
 
 ## Objects
 
@@ -87,5 +88,8 @@ Notes:
 - `POST /sessions` returns as soon as the session record exists. The UI then
   polls `GET /sessions/{id}` about once a second until `state` is `ready` or
   `error`.
-- `data_dir` must be an existing directory. It is mounted at `/data`.
+- `data_dir` must be an existing directory. It is mounted at `/data`. Leave it out
+  for no `/data` mount. It is not the storage folder: `Settings.storage_dir` is
+  always mounted at the domain's storage path (e.g. `/neurodesktop-storage`).
+- `engine` and `cvmfs` accept `"auto"` as well as the specific values.
 - Any field left out of a `POST /sessions` body takes its value from `Settings`.
