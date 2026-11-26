@@ -61,7 +61,7 @@ test -f %{buildroot}%{python3_sitelib}/sciget_core/domains/neurodesk.yml
 # Engines are faked in the tests; nothing here starts a container.
 # -o pythonpath= drops pyproject's src/ entry so the INSTALLED package is tested.
 %pytest -p no:cacheprovider -o pythonpath= tests
-%{buildroot}%{_bindir}/sciget --version
+PYTHONPATH=%{buildroot}%{python3_sitelib} %{buildroot}%{_bindir}/sciget --version
 
 %files -n %{pypi_name} -f %{pyproject_files}
 %license LICENSE
