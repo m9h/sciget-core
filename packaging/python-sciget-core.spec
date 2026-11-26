@@ -6,10 +6,8 @@ Release:        1%{?dist}
 Summary:        Start and manage Sciget/Neurodesk container sessions
 
 License:        BSD-3-Clause
-URL:            https://github.com/scigetorg/neurodesk-app
-# No public repository yet: the tarball is `git archive` of the local repo,
-#   git archive --prefix=sciget-core-%%{version}/ -o sciget-core-%%{version}.tar.gz HEAD
-Source0:        sciget-core-%{version}.tar.gz
+URL:            https://github.com/m9h/sciget-core
+Source0:        %{url}/archive/v%{version}/sciget-core-%{version}.tar.gz
 
 BuildArch:      noarch
 

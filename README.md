@@ -1,5 +1,10 @@
 # sciget-core
 
+> An independent project, not an official Sciget or Neurodesk release. It runs
+> the Neurodesk/Sciget container images published by the Neurodesk project and
+> reads the same domain files as the Sciget App, but it is developed and
+> supported separately.
+
 Start and manage [Sciget](https://github.com/scigetorg/neurodesk-app)/Neurodesk
 container sessions from the command line or a local web UI, with no Electron.
 
