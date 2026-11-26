@@ -56,9 +56,21 @@ Built-in domains are in `src/sciget_core/domains/`. Files in
 
 ## Status
 
-Version 0.1.0, not yet tested against the real Neurodesk image. In particular,
-the unprivileged `container` CVMFS mode, rootless `keep-id` file ownership and
-the Apptainer engine still need testing end to end.
+Version 0.1.0. Tested end to end on 2026-11-26 on Fedora 44 x86_64 with
+rootless Podman 5.8.9 and `docker.io/vnmd/neurodesktop:2026-09-23`:
+
+- the session became ready about 2 minutes after the image pull;
+- the container was not privileged (only `CAP_SYS_ADMIN` and `/dev/fuse`), and
+  the image's own CVMFS client mounted `neurodesk.ardc.edu.au` inside it,
+  showing 2,873 environment modules (FSL among them);
+- files written as jovyan to `/data` and the storage folder belong to the
+  user's own UID on the host;
+- JupyterLab answered with the token and refused requests without it, and the
+  token did not appear in the host's process list;
+- `sciget stop` stopped and removed the container.
+
+Not yet tested end to end: the Docker and Apptainer engines, `--cvmfs host`
+(needs the cvmfs client on the host), and GPUs.
 
 ## Licence
 
