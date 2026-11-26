@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sciget-core"
+version = "0.1.0"
+description = "Start and manage Sciget/Neurodesk container sessions from the command line or a local web UI"
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=5.4",
+    "platformdirs>=3",
+]
+
+[project.scripts]
+sciget = "sciget_core.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+sciget_core = ["domains/*.yml", "web/*", "web/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
