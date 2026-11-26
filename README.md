@@ -74,8 +74,14 @@ rootless Podman 5.8.9 and `docker.io/vnmd/neurodesktop:2026-09-23`:
   token did not appear in the host's process list;
 - `sciget stop` stopped and removed the container.
 
-Not yet tested end to end: the Docker and Apptainer engines, `--cvmfs host`
-(needs the cvmfs client on the host), and GPUs.
+The same checks passed with rootful Docker 29.9.2 (SELinux enforcing) on the
+same host: not privileged, in-container CVMFS with the same 2,873 modules,
+host-UID files via NB_UID/NB_GID, token auth, and the container removed after
+`sciget stop`.
+
+Not yet tested end to end: the Apptainer engine, `--cvmfs host` (needs the
+cvmfs client on the host; Fedora packages are in the mhough/neurofedora COPR),
+and GPUs.
 
 ## Licence
 
